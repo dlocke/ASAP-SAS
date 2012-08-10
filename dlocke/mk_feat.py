@@ -61,7 +61,7 @@ def main():
   del a['EssayText']
   
   for i, tbl in a.subtbl_groupby('EssaySet'):
-    tbl.to_csv_file('score_%d.csv' % i, sep=",")
+    tbl.to_csv_file('pred_%d.csv' % i, sep=",")
 
 if __name__ == "__main__":
   main()
