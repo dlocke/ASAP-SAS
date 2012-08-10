@@ -2,11 +2,7 @@
 
 from augustus.kernel.unitable import *
 
-def main():
-  
-  a = UniTable().from_csv_file('../Data/train_rel_2.tsv')
-  print a.summary()
-  
+def mk_feat(a):
   #Feature #1 Count of double letters used in the essay.
   #Feature #2 Number of spaces in the essay
   #Feature #3 Length of the essay
@@ -43,13 +39,29 @@ def main():
     x['Length'] = length
     x['DblLtrRatio'] = dbl_ltr_cnt / float(length)
     x['SpaceRatio'] = space_cnt / float(length)
+  return a
+
+def main():
+  
+  a = UniTable().from_csv_file('../Data/train_rel_2.tsv')
+  print a.summary()
+  a = mk_feat(a)
   
   #I can't quite figure out how to output this field correctly, for now just remove it from the output
   del a['EssayText']
   
   for i, tbl in a.subtbl_groupby('EssaySet'):
     tbl.to_csv_file('train_%d.csv' % i, sep=",")
-    
+  
+  a = UniTable().from_csv_file('../Data/public_leaderboard_rel_2.tsv')
+  print a.summary()
+  a = mk_feat(a)
+  
+  #I can't quite figure out how to output this field correctly, for now just remove it from the output
+  del a['EssayText']
+  
+  for i, tbl in a.subtbl_groupby('EssaySet'):
+    tbl.to_csv_file('score_%d.csv' % i, sep=",")
 
 if __name__ == "__main__":
   main()
